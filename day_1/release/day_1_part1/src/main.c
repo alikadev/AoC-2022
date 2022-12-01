@@ -46,8 +46,9 @@ void compare_and_apply(void)
 
 int main(void)
 {
-	char *data = read_data_input();
-	if(!data) return 1;
+	char *start = read_data_input();
+	if(!start) return 1;
+	char *data = start;
 
 	char buff[16] = {0}, i = 0;
 
@@ -72,6 +73,8 @@ int main(void)
 	// last compare
 	compare_and_apply();
 
+
+	free(start);
 	return !write_data_output();
 
 
