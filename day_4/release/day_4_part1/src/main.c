@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 
 #define DATA_IN_FILE "data.in"
 #define DATA_OUT_FILE "data.out"
 
-int value = 0;
+int nbContains = 0;
+
+typedef int range_t[2];
 
 char *read_data_input(void)
 {
@@ -26,18 +29,16 @@ char *read_data_input(void)
 	return data;
 }
 
-
 int write_data_output(void)
 {
 	FILE *file = fopen(DATA_OUT_FILE, "w+");
 	if(!file) return 0;
 
-	fprintf(file, "%d\n", value);
+	fprintf(file, "%d\n", nbContains);
 
 	fclose(file);
 	return 1;
 }
-
 
 int get_integer(char **data)
 {
@@ -67,8 +68,27 @@ int main(void)
 	}
 	char *data = start;
 
-	printf("Hello, world!\nFile content:\n%s\n",data);
+	while(*data != 0) {
+		range_t first, second;
+		first[0] = get_integer(&data);
+		data ++;
+		first[1] = get_integer(&data);
+		data ++;
+		second[0] = get_integer(&data);
+		data ++;
+		second[1] = get_integer(&data);
+		skip_spaces(&data);
 
+		if(		(first[0] >= second[0] && first[1] <= second[1])
+			|| 	(second[0] >= first[0] && second[1] <= first[1]))
+		{
+			nbContains++;
+		}
+	}
+
+	if(!write_data_output()){
+		fprintf(stderr, "Fail to write data output... value is %d\n", nbContains);
+	}
 	free(start);
 	return 0;
 }

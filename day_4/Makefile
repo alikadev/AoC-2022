@@ -27,8 +27,7 @@ build: $(BINARY)
 
 all: clean $(BINARY)
 
-release: release_code clean
-release_code: $(BINARY)
+release: all
 ifndef ID
 	@echo You need to define the release ID! make release ID=1
 	@$(error ID is not set... use "make release ID=1")
@@ -48,7 +47,6 @@ help:
 	@echo '- release | build all and put result in release directory'
 
 clean:
-	@echo "Code is clean"
 	@mkdir -p $(D_BUILD)
 	@rm -rf $(D_BUILD)/*
 	@rm -f $(BINARY)
