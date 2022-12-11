@@ -13,22 +13,14 @@ static int result = 0;
 uint32_t cycle = 1;
 int32_t  x = 1;
 
-#define WIDTH 40
-char line[WIDTH+1];
-char pixid = 0;
-
 void check_instr(void)
 {
-    if(x - 1 == pixid || x == pixid || x + 1 == pixid)
-        line[pixid] = '#';
-    if(cycle % 40 == 0){
-        printf("Cycle %3d -> %s <- Cycle %3d\n", cycle-39, line, cycle);
-        for (int i = 0; i < WIDTH; ++i) {
-            line[i] = '.';
-        }
-        pixid = 0;
-    } else 
-        pixid ++;
+    if(cycle > 220)
+        return;
+    
+    if(cycle%40 == 20)
+        result += cycle * x;
+    
 }
 
 void addx(char *data)
@@ -36,8 +28,10 @@ void addx(char *data)
     data += 2;
     
     // Check mid-instruction
+    //x ++;
     cycle++;
     check_instr();
+    //x --;
 
     // Check negative
     int mul = 1;
@@ -58,12 +52,8 @@ void addx(char *data)
 void start(char *data)
 {
     char instr[5]={0}, instrIdx=0;
-        for (int i = 0; i < WIDTH; ++i) {
-            line[i] = '.';
-        }
 
-    while(*data && cycle){
-        check_instr();
+    while(*data && cycle <= 220){
 
         // Read instruction
         instr[instrIdx++] = *data++;
@@ -79,6 +69,8 @@ void start(char *data)
             cycle++;
             skip_line(&data);
         }
+
+        check_instr();
 
         instrIdx = 0;
     }
